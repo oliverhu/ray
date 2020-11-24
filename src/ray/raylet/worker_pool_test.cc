@@ -19,6 +19,7 @@
 #include "ray/common/constants.h"
 #include "ray/raylet/node_manager.h"
 #include "ray/util/process.h"
+#include "ray/util/logging.h"
 
 namespace ray {
 
@@ -175,6 +176,7 @@ class WorkerPoolTest : public ::testing::TestWithParam<bool> {
   void TestStartupWorkerProcessCount(Language language, int num_workers_per_process,
                                      std::vector<std::string> expected_worker_command) {
     int desired_initial_worker_process_count = 100;
+    RAY_LOG(ERROR) << "test222";
     int expected_worker_process_count = static_cast<int>(std::ceil(
         static_cast<double>(MAXIMUM_STARTUP_CONCURRENCY) / num_workers_per_process));
     ASSERT_TRUE(expected_worker_process_count <
