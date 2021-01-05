@@ -1130,8 +1130,7 @@ void NodeManager::ProcessClientMessage(const std::shared_ptr<ClientConnection> &
   if (registered_worker && registered_worker->IsDead()) {
     // For a worker that is marked as dead (because the job has died already),
     // all the messages are ignored except DisconnectClient.
-    if ((message_type_value != protocol::MessageType::DisconnectClient) &&
-        (message_type_value != protocol::MessageType::IntentionalDisconnectClient)) {
+    if ((message_type_value != protocol::MessageType::DisconnectClient)) {
       // Listen for more messages.
       client->ProcessMessages();
       return;
@@ -1149,13 +1148,7 @@ void NodeManager::ProcessClientMessage(const std::shared_ptr<ClientConnection> &
     HandleWorkerAvailable(client);
   } break;
   case protocol::MessageType::DisconnectClient: {
-    ProcessDisconnectClientMessage(client);
-    // We don't need to receive future messages from this client,
-    // because it's already disconnected.
-    return;
-  } break;
-  case protocol::MessageType::IntentionalDisconnectClient: {
-    ProcessDisconnectClientMessage(client, /* intentional_disconnect = */ true);
+    ProcessDisconnectClientMessage(client, message_data);
     // We don't need to receive future messages from this client,
     // because it's already disconnected.
     return;
@@ -1503,12 +1496,11 @@ void NodeManager::DisconnectClient(const std::shared_ptr<ClientConnection> &clie
 }
 
 void NodeManager::ProcessDisconnectClientMessage(
-    const std::shared_ptr<ClientConnection> &client, bool intentional_disconnect) {
-  if (intentional_disconnect) {
-    DisconnectClient(client, rpc::ClientDisconnectType::FINISHED);
-    return;
-  }
-  DisconnectClient(client);
+    const std::shared_ptr<ClientConnection> &client, const uint8_t *message_data) {
+  auto message = flatbuffers::GetRoot<protocol::DisconnectClient>(message_data);
+  auto disconnect_type =
+      static_cast<rpc::ClientDisconnectType>(message->disconnect_type());
+  DisconnectClient(client, disconnect_type);
 }
 
 void NodeManager::ProcessFetchOrReconstructMessage(

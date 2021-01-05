@@ -281,11 +281,11 @@ void ServerConnection::DoAsyncWrites() {
 std::shared_ptr<ClientConnection> ClientConnection::Create(
     ClientHandler &client_handler, MessageHandler &message_handler,
     local_stream_socket &&socket, const std::string &debug_label,
-    const std::vector<std::string> &message_type_enum_names,
-    int64_t error_message_type, const std::vector<uint8_t> &error_message_data) {
-  std::shared_ptr<ClientConnection> self(
-      new ClientConnection(message_handler, std::move(socket), debug_label,
-                           message_type_enum_names, error_message_type, error_message_data));
+    const std::vector<std::string> &message_type_enum_names, int64_t error_message_type,
+    const std::vector<uint8_t> &error_message_data) {
+  std::shared_ptr<ClientConnection> self(new ClientConnection(
+      message_handler, std::move(socket), debug_label, message_type_enum_names,
+      error_message_type, error_message_data));
   // Let our manager process our new connection.
   client_handler(*self);
   return self;
@@ -294,8 +294,8 @@ std::shared_ptr<ClientConnection> ClientConnection::Create(
 ClientConnection::ClientConnection(
     MessageHandler &message_handler, local_stream_socket &&socket,
     const std::string &debug_label,
-    const std::vector<std::string> &message_type_enum_names,
-    int64_t error_message_type, const std::vector<uint8_t> &error_message_data)
+    const std::vector<std::string> &message_type_enum_names, int64_t error_message_type,
+    const std::vector<uint8_t> &error_message_data)
     : ServerConnection(std::move(socket)),
       registered_(false),
       message_handler_(message_handler),

@@ -194,8 +194,8 @@ class ClientConnection : public ServerConnection {
   static std::shared_ptr<ClientConnection> Create(
       ClientHandler &new_client_handler, MessageHandler &message_handler,
       local_stream_socket &&socket, const std::string &debug_label,
-      const std::vector<std::string> &message_type_enum_names,
-      int64_t error_message_type, const std::vector<uint8_t> &error_message_data = _dummy_error_message_data);
+      const std::vector<std::string> &message_type_enum_names, int64_t error_message_type,
+      const std::vector<uint8_t> &error_message_data = _dummy_error_message_data);
 
   std::shared_ptr<ClientConnection> shared_ClientConnection_from_this() {
     return std::static_pointer_cast<ClientConnection>(shared_from_this());
@@ -211,11 +211,11 @@ class ClientConnection : public ServerConnection {
 
  protected:
   /// A protected constructor for a node client connection.
-  ClientConnection(MessageHandler &message_handler, local_stream_socket &&socket,
-                   const std::string &debug_label,
-                   const std::vector<std::string> &message_type_enum_names,
-                   int64_t error_message_type,
-                   const std::vector<uint8_t> &error_message_data = _dummy_error_message_data);
+  ClientConnection(
+      MessageHandler &message_handler, local_stream_socket &&socket,
+      const std::string &debug_label,
+      const std::vector<std::string> &message_type_enum_names, int64_t error_message_type,
+      const std::vector<uint8_t> &error_message_data = _dummy_error_message_data);
   /// Process an error from the last operation, then process the  message
   /// header from the client.
   void ProcessMessageHeader(const boost::system::error_code &error);

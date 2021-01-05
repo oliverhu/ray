@@ -484,10 +484,10 @@ class NodeManager : public rpc::NodeManagerServiceHandler {
   /// client.
   ///
   /// \param client The client that sent the message.
-  /// \param intentional_disconnect Whether the client was intentionally disconnected.
+  /// \param message_data A pointer to the message data.
   /// \return Void.
   void ProcessDisconnectClientMessage(const std::shared_ptr<ClientConnection> &client,
-                                      bool intentional_disconnect = false);
+                                      const uint8_t *message_data);
 
   /// Process client message of FetchOrReconstruct
   ///
